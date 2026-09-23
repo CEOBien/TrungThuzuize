@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#140d2b" />
+  <title>Trung Thu Cùng Em 🌕</title>
+  <style>
+    :root{
+      --bg1:#0b1026;
+      --bg2:#23113f;
+      --pink:#ff87c8;
+      --gold:#ffd978;
+      --cream:#fff5df;
+      --glass:rgba(255,255,255,.10);
+      --glass2:rgba(255,255,255,.16);
+      --text:#fff7ef;
+      --muted:#d9d2e9;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 80% 15%, rgba(255,222,145,.14), transparent 22%),
+        radial-gradient(circle at 20% 85%, rgba(255,105,180,.11), transparent 25%),
+        linear-gradient(145deg,var(--bg1),var(--bg2));
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.9) 0 1px, transparent 1.5px);
+      background-size:70px 70px;
+      opacity:.18;
+      animation: drift 26s linear infinite;
+      z-index:-2;
+    }
+    @keyframes drift{to{background-position:140px 70px}}
+    .moon{
+      position:fixed;
+      width:190px;height:190px;border-radius:50%;
+      right:7vw;top:5vh;
+      background:
+        radial-gradient(circle at 35% 35%, #fff9da 0 22%, #ffe8a5 55%, #ffc96d 100%);
+      box-shadow:0 0 45px rgba(255,225,143,.42),0 0 100px rgba(255,202,105,.18);
+      z-index:-1;
+      animation:floatMoon 6s ease-in-out infinite;
+    }
+    .moon::after{
+      content:"";
+      position:absolute; inset:28px 36px 74px 77px;
+      border-radius:50%;
+      background:rgba(171,121,53,.10);
+      box-shadow:-48px 44px 0 13px rgba(171,121,53,.08), 38px 55px 0 7px rgba(171,121,53,.08);
+    }
+    @keyframes floatMoon{50%{transform:translateY(10px)}}
+    .lantern{
+      position:fixed; width:38px;height:50px;border-radius:14px;
+      background:linear-gradient(#ff9966,#ff4d6d);
+      box-shadow:0 0 20px rgba(255,93,110,.45);
+      z-index:-1; opacity:.8;
+      animation:sway 4s ease-in-out infinite;
+    }
+    .lantern::before,.lantern::after{
+      content:"";position:absolute;left:50%;transform:translateX(-50%);
+      width:22px;height:4px;background:#f9cf71;border-radius:3px;
+    }
+    .lantern::before{top:-4px}.lantern::after{bottom:-4px}
+    .lantern.l1{left:5vw;top:14vh}
+    .lantern.l2{left:12vw;top:42vh;animation-delay:1.3s}
+    .lantern.l3{right:17vw;top:48vh;animation-delay:.7s}
+    @keyframes sway{50%{transform:rotate(4deg) translateY(8px)}}
+    .app{min-height:100vh}
+    .scene{
+      min-height:100vh;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:88px 20px 44px;
+      opacity:0;
+      transform:translateY(16px);
+      transition:.5s ease;
+    }
+    .scene.active{display:flex}
+    .scene.visible{opacity:1;transform:none}
+    .panel{
+      width:min(920px, 96vw);
+      background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.07));
+      border:1px solid rgba(255,255,255,.16);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border-radius:30px;
+      padding:clamp(24px,4vw,46px);
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    h1,h2,h3{margin:0 0 16px;line-height:1.15}
+    h1{font-size:clamp(42px,8vw,82px);font-family:Georgia, "Times New Roman", serif}
+    h2{font-size:clamp(30px,5vw,52px);font-family:Georgia, "Times New Roman", serif}
+    .subtitle{font-size:clamp(17px,2.5vw,23px);color:var(--muted);line-height:1.65;margin:0 auto 28px;max-width:720px}
+    .highlight{color:var(--gold);text-shadow:0 0 22px rgba(255,220,120,.25)}
+    .btn{
+      border:0; cursor:pointer; color:#2b1735; font-weight:800;
+      padding:14px 24px; border-radius:999px; font-size:16px;
+      background:linear-gradient(135deg,var(--gold),#ffb6d9);
+      box-shadow:0 12px 30px rgba(255,193,154,.22);
+      transition:.22s ease;
+      margin:6px;
+    }
+    .btn:hover{transform:translateY(-2px) scale(1.015)}
+    .btn.secondary{background:rgba(255,255,255,.12);color:var(--text);border:1px solid rgba(255,255,255,.18)}
+    .topbar{
+      position:fixed; top:14px; left:50%; transform:translateX(-50%);
+      z-index:20; width:min(760px,92vw);
+      display:flex; align-items:center; gap:12px;
+      padding:10px 14px; border-radius:999px;
+      background:rgba(13,10,30,.45); border:1px solid rgba(255,255,255,.12);
+      backdrop-filter:blur(12px);
+    }
+    .progress{flex:1;height:7px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}
+    .progress > div{height:100%;width:10%;background:linear-gradient(90deg,var(--pink),var(--gold));transition:.4s ease}
+    .music-btn{
+      width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.09);color:white;cursor:pointer;font-size:18px;
+    }
+    .tiny{font-size:12px;color:#cfc6df;white-space:nowrap}
+    .choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px}
+    .choice{
+      padding:18px;border-radius:20px;background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.13);cursor:pointer;transition:.2s;
+    }
+    .choice:hover{transform:translateY(-3px);background:rgba(255,255,255,.13)}
+    .reply{min-height:36px;margin-top:18px;color:var(--gold);font-weight:700}
+    .memory-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px}
+    .memory-card{
+      position:relative; overflow:hidden; min-height:190px;
+      border-radius:24px; border:1px solid rgba(255,255,255,.14);
+      background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.05));
+      padding:22px; text-align:left;
+    }
+    .memory-card .emoji{font-size:38px}
+    .memory-card p{color:var(--muted);line-height:1.55}
+    .memory-card::after{
+      content:"";position:absolute;width:100px;height:100px;border-radius:50%;
+      right:-25px;bottom:-35px;background:radial-gradient(circle,rgba(255,215,120,.26),transparent 70%);
+    }
+    .stars-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:28px 0}
+    .star{
+      font-size:44px;cursor:pointer;filter:grayscale(1);opacity:.55;transition:.24s;
+      user-select:none;
+    }
+    .star.on{filter:none;opacity:1;transform:scale(1.16) rotate(6deg)}
+    .star-text{min-height:64px;color:var(--cream);font-size:18px;line-height:1.55}
+    .game-wrap{max-width:620px;margin:22px auto 0}
+    .game{
+      position:relative;height:360px;border-radius:24px;overflow:hidden;
+      background:
+        linear-gradient(to top,rgba(53,36,77,.95) 0 18%,transparent 18%),
+        radial-gradient(circle at 80% 15%, rgba(255,226,143,.18), transparent 20%),
+        linear-gradient(#0e1538,#2d174d);
+      border:1px solid rgba(255,255,255,.16);
+      touch-action:none;
+    }
+    .game::before{
+      content:"🌙";position:absolute;font-size:74px;right:28px;top:18px;opacity:.9
+    }
+    .rabbit{
+      position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
+      font-size:56px;transition:left .06s linear;user-select:none
+    }
+    .cake{
+      position:absolute;top:-44px;font-size:38px;user-select:none;
+      animation:fall linear forwards;
+    }
+    @keyframes fall{to{transform:translateY(390px) rotate(280deg)}}
+    .score{display:flex;justify-content:center;gap:22px;font-weight:800;margin-top:12px;color:var(--gold)}
+    .game-msg{min-height:34px;margin-top:10px;font-weight:700}
+    .letter{
+      max-width:700px;margin:24px auto 0;text-align:left;
+      background:#fff5df;color:#4b2b3e;border-radius:18px;padding:28px;
+      box-shadow:0 22px 60px rgba(0,0,0,.24);
+      transform:rotate(-.6deg);
+      font-family:Georgia, "Times New Roman", serif;
+      line-height:1.75;font-size:18px;
+    }
+    .envelope{font-size:88px;cursor:pointer;display:inline-block;animation:pulse 2s ease-in-out infinite}
+    @keyframes pulse{50%{transform:scale(1.08)}}
+    .hidden{display:none!important}
+    .final-heart{font-size:86px;animation:beat 1.2s infinite}
+    @keyframes beat{50%{transform:scale(1.12)}}
+    .hug{
+      display:flex;justify-content:center;gap:14px;font-size:74px;margin:20px 0;
+      transition:.5s ease;
+    }
+    .hug.close{gap:0}
+    .footer-note{margin-top:24px;color:#cfc8de;font-size:13px}
+    .spark{
+      position:fixed;pointer-events:none;z-index:50;font-size:22px;
+      animation:spark 1.1s ease-out forwards;
+    }
+    @keyframes spark{
+      0%{opacity:1;transform:translate(0,0) scale(.8)}
+      100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.5) rotate(160deg)}
+    }
+    .fade-line{opacity:0;transform:translateY(8px);animation:reveal .8s forwards}
+    .fade-line:nth-child(2){animation-delay:.9s}
+    .fade-line:nth-child(3){animation-delay:1.8s}
+    .fade-line:nth-child(4){animation-delay:2.7s}
+    @keyframes reveal{to{opacity:1;transform:none}}
+    .name-badge{
+      display:inline-block;padding:8px 14px;border-radius:999px;margin-bottom:16px;
+      background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);color:var(--gold)
+    }
+    @media(max-width:720px){
+      .memory-grid{grid-template-columns:1fr}
+      .choice-grid{grid-template-columns:1fr}
+      .stars-grid{grid-template-columns:repeat(5,1fr);gap:4px}
+      .star{font-size:34px}
+      .moon{width:120px;height:120px;right:-10px;top:72px}
+      .panel{border-radius:24px}
+      .tiny{display:none}
+      .game{height:320px}
+    }
+  </style>
+</head>
+<body>
+  <div class="moon"></div>
+  <div class="lantern l1"></div>
+  <div class="lantern l2"></div>
+  <div class="lantern l3"></div>
+
+  <div class="topbar">
+    <div class="tiny">🌕 Trung Thu cùng em</div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <button class="music-btn" id="musicBtn" title="Bật / tắt âm thanh">♫</button>
+  </div>
+
+  <main class="app">
+    <section class="scene active visible" data-scene="0">
+      <div class="panel">
+        <div class="name-badge">Gửi <span data-gf>Trà My của Biển</span> ❤️</div>
+        <h1>Tối nay có hẹn với <span class="highlight">trăng</span></h1>
+        <p class="subtitle">
+          Người ta nói Trung Thu là ngày đoàn viên. Còn với anh, chỉ cần có em thì ngày nào cũng giống như một ngày để trở về.
+        </p>
+        <button class="btn" onclick="nextScene()">🏮 Bắt đầu chuyến đi</button>
+        <div class="footer-note">Một món quà nhỏ được làm riêng cho em.</div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="1">
+      <div class="panel">
+        <h2>Trước khi đi tiếp…</h2>
+        <p class="subtitle">Anh có một câu hỏi nhỏ: Em có nhớ lần đầu chúng mình gặp nhau không?</p>
+        <div class="choice-grid">
+          <div class="choice" onclick="answerChoice('Nhớ chứ 😌')">Nhớ chứ 😌</div>
+          <div class="choice" onclick="answerChoice('Nhớ mang máng 🤔')">Nhớ mang máng 🤔</div>
+          <div class="choice" onclick="answerChoice('Không nhớ 😝')">Không nhớ 😝</div>
+        </div>
+        <div class="reply" id="choiceReply"></div>
+        <button class="btn secondary" onclick="nextScene()">Đi tiếp →</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="2">
+      <div class="panel">
+        <h2>Con đường ký ức 🏮</h2>
+        <p class="subtitle">Mỗi chiếc đèn là một mảnh nhỏ trong câu chuyện của chúng mình.</p>
+        <div class="memory-grid">
+          <div class="memory-card">
+            <div class="emoji">🌸</div>
+            <h3>Lần đầu gặp nhau</h3>
+            <p>Ngày đó anh cũng không nghĩ người trước mặt mình lại trở thành một người quan trọng đến vậy.</p>
+          </div>
+          <div class="memory-card">
+            <div class="emoji">🍜</div>
+            <h3>Lần đầu đi chơi</h3>
+            <p>Một buổi đi chơi rất bình thường, nhưng lại là một trong những ngày anh nhớ rất lâu.</p>
+          </div>
+          <div class="memory-card">
+            <div class="emoji">😂</div>
+            <h3>Một khoảnh khắc ngốc nghếch</h3>
+            <p>Bằng chứng rõ nhất cho việc chúng mình thân nhau là… em vẫn chưa bỏ anh sau tất cả những pha ngốc nghếch.</p>
+          </div>
+          <div class="memory-card">
+            <div class="emoji">🤍</div>
+            <h3>Những ngày không vui</h3>
+            <p>Không phải lúc nào chúng mình cũng vui. Nhưng anh vẫn rất trân trọng vì sau cùng, chúng mình vẫn chọn ở lại.</p>
+          </div>
+        </div>
+        <button class="btn" onclick="nextScene()">Tiếp tục hành trình ✨</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="3">
+      <div class="panel">
+        <h2>Giúp Thỏ Ngọc nhặt bánh 🐰🥮</h2>
+        <p class="subtitle">Di chuyển chuột hoặc kéo ngón tay sang trái/phải. Bắt đủ 5 chiếc bánh để mở khóa điều bí mật.</p>
+        <div class="game-wrap">
+          <div class="game" id="game">
+            <div class="rabbit" id="rabbit">🐰</div>
+          </div>
+          <div class="score">
+            <span>🥮 Đã bắt: <b id="score">0</b>/5</span>
+            <span>💫 Bỏ lỡ: <b id="miss">0</b></span>
+          </div>
+          <div class="game-msg" id="gameMsg">Bấm “Bắt đầu” rồi di chuyển Thỏ Ngọc nhé.</div>
+          <button class="btn" id="startGameBtn" onclick="startGame()">Bắt đầu mini game</button>
+          <button class="btn secondary hidden" id="afterGameBtn" onclick="nextScene()">Mở điều bí mật ✨</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="4">
+      <div class="panel">
+        <h2>Vẫn thiếu một thứ…</h2>
+        <p class="subtitle">Anh đã gom đủ bánh Trung Thu rồi, nhưng hình như vẫn chưa đủ.</p>
+        <button class="btn" onclick="revealMissing()">Thiếu gì vậy? 👀</button>
+        <div id="missingText" class="hidden" style="margin-top:26px">
+          <h2 class="highlight">Thiếu em. ❤️</h2>
+          <p class="subtitle">Ừ, nghe hơi sến. Nhưng mà đúng.</p>
+          <button class="btn secondary" onclick="nextScene()">Thôi đi tiếp 😝</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="5">
+      <div class="panel">
+        <h2>5 điều anh thích ở em ⭐</h2>
+        <p class="subtitle">Bấm từng ngôi sao để mở một điều.</p>
+        <div class="stars-grid">
+          <div class="star" onclick="showStar(0,this)">⭐</div>
+          <div class="star" onclick="showStar(1,this)">⭐</div>
+          <div class="star" onclick="showStar(2,this)">⭐</div>
+          <div class="star" onclick="showStar(3,this)">⭐</div>
+          <div class="star" onclick="showStar(4,this)">⭐</div>
+        </div>
+        <div class="star-text" id="starText">Chọn một ngôi sao nhé ✨</div>
+        <button class="btn secondary" onclick="nextScene()">Tiếp tục</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="6">
+      <div class="panel">
+        <h2>Ngồi lại một chút dưới trăng 🌕</h2>
+        <div style="max-width:720px;margin:28px auto;font-size:20px;line-height:1.85;color:var(--cream)">
+          <p class="fade-line">Anh không biết sau này chúng mình sẽ trải qua bao nhiêu mùa Trung Thu nữa.</p>
+          <p class="fade-line">Có thể sẽ có những năm rất vui. Cũng có thể có những năm cả hai đều bận rộn.</p>
+          <p class="fade-line">Nhưng anh mong dù ở đâu, chúng mình vẫn có thể nhìn cùng một vầng trăng.</p>
+          <p class="fade-line highlight">Và vẫn còn muốn kể nhau nghe những chuyện nhỏ trong ngày.</p>
+        </div>
+        <button class="btn" onclick="nextScene()">Có một lá thư dành cho em 💌</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="7">
+      <div class="panel">
+        <h2>Một lá thư Trung Thu</h2>
+        <p class="subtitle">Bấm vào phong thư để mở.</p>
+        <div class="envelope" id="envelope" onclick="openLetter()">💌</div>
+        <div class="letter hidden" id="letter">
+          <p><strong>Gửi <span data-gf>Trà My của Biển</span>,</strong></p>
+          <p>Trung Thu năm nay anh không muốn chỉ gửi em một lời chúc bình thường.</p>
+          <p>Anh muốn làm một thứ gì đó mà sau này, khi vô tình mở lại, chúng mình có thể nhớ rằng đã từng có một mùa Trung Thu như thế.</p>
+          <p>Cảm ơn em vì đã xuất hiện trong cuộc sống của anh, vì những buổi đi chơi, những câu chuyện chẳng đầu chẳng cuối, những lúc vui và cả những lần giận nhau.</p>
+          <p>Anh không mong mọi thứ lúc nào cũng hoàn hảo. Anh chỉ mong chúng mình vẫn có thể tiếp tục cùng nhau tạo thêm thật nhiều kỷ niệm.</p>
+          <p><strong>Trung Thu vui vẻ nhé. Và hy vọng những mùa trăng tiếp theo… anh vẫn là người được ngắm trăng cùng em. ❤️</strong></p>
+          <p style="text-align:right">— <span data-bf>Tên của bạn</span></p>
+        </div>
+        <button class="btn secondary hidden" id="letterNext" onclick="nextScene()">Đi đến bất ngờ cuối cùng →</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="8">
+      <div class="panel">
+        <div class="final-heart">❤️</div>
+        <h1 style="font-size:clamp(40px,7vw,72px)">Happy Mid-Autumn Festival</h1>
+        <p class="subtitle">Chúc <span data-gf>Người anh iu</span> một mùa Trung Thu thật vui. Cảm ơn em vì đã đi hết hành trình nhỏ này cùng anh.</p>
+        <div class="hug" id="hug">
+          <span>👦🏻</span><span>👧🏻</span>
+        </div>
+        <button class="btn" onclick="hugMe()">❤️ Ôm anh một cái</button>
+        <button class="btn secondary" onclick="giftReveal()">🥮 Nhận quà Trung Thu</button>
+        <div id="giftText" class="hidden" style="margin-top:22px">
+          <h3 class="highlight">Phần quà thật đang ở chỗ anh 😌</h3>
+          <p class="subtitle" style="margin-bottom:0">Hết web rồi, còn quà thì gặp anh để nhận nhé.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ==========================
+    // CHỈNH THÔNG TIN Ở ĐÂY
+    // ==========================
+    const CONFIG = {
+      girlfriendName: "Bà chã hơm",
+      boyfriendName: "Ông chã húi",
+      starMessages: [
+        "Anh thích cách em cười khi gặp chuyện ngớ ngẩn.",
+        "Anh thích việc em luôn nhớ những chuyện nhỏ mà đôi khi anh còn quên.",
+        "Anh thích những lúc em kể anh nghe đủ thứ chuyện linh tinh trong ngày.",
+        "Anh thích cả những lúc em dỗi — mặc dù lúc đó anh cũng hơi rén. 😂",
+        "Và điều anh thích nhất… là người đang đọc dòng chữ này. ❤️"
+      ]
+    };
+
+    document.querySelectorAll("[data-gf]").forEach(el => el.textContent = CONFIG.girlfriendName);
+    document.querySelectorAll("[data-bf]").forEach(el => el.textContent = CONFIG.boyfriendName);
+
+    const scenes = [...document.querySelectorAll(".scene")];
+    let current = 0;
+    const progressBar = document.getElementById("progressBar");
+
+    function goScene(index){
+      scenes[current].classList.remove("visible");
+      setTimeout(() => {
+        scenes[current].classList.remove("active");
+        current = Math.max(0, Math.min(index, scenes.length - 1));
+        scenes[current].classList.add("active");
+        window.scrollTo({top:0,behavior:"smooth"});
+        requestAnimationFrame(() => setTimeout(()=>scenes[current].classList.add("visible"),40));
+        progressBar.style.width = `${((current + 1) / scenes.length) * 100}%`;
+      }, 280);
+    }
+    function nextScene(){ goScene(current + 1); }
+    progressBar.style.width = `${(1/scenes.length)*100}%`;
+
+    function answerChoice(ans){
+      const reply = document.getElementById("choiceReply");
+      if(ans.includes("Nhớ chứ")) reply.textContent = "Anh biết mà 😌 Có những chuyện chỉ cần nhớ bằng cảm giác là đủ.";
+      else if(ans.includes("mang máng")) reply.textContent = "Không sao, để anh nhớ phần còn lại cho hai đứa. 🤍";
+      else reply.textContent = "Không sao. Anh nhớ là được rồi. 😌";
+      sparkle(window.innerWidth/2, window.innerHeight/2, 10);
+    }
+
+    function revealMissing(){
+      document.getElementById("missingText").classList.remove("hidden");
+      sparkle(window.innerWidth/2, window.innerHeight/2, 18);
+    }
+
+    function showStar(i,el){
+      document.getElementById("starText").textContent = CONFIG.starMessages[i];
+      el.classList.add("on");
+      sparkle(el.getBoundingClientRect().left+20, el.getBoundingClientRect().top+20, 7);
+    }
+
+    function openLetter(){
+      document.getElementById("envelope").classList.add("hidden");
+      document.getElementById("letter").classList.remove("hidden");
+      document.getElementById("letterNext").classList.remove("hidden");
+      sparkle(window.innerWidth/2, window.innerHeight/2, 16);
+    }
+
+    function hugMe(){
+      document.getElementById("hug").classList.add("close");
+      sparkle(window.innerWidth/2, window.innerHeight*.55, 22);
+    }
+
+    function giftReveal(){
+      document.getElementById("giftText").classList.remove("hidden");
+      sparkle(window.innerWidth/2, window.innerHeight*.65, 20);
+    }
+
+    function sparkle(x,y,count=10){
+      const icons=["✨","💖","🌸","⭐","🏮"];
+      for(let i=0;i<count;i++){
+        const s=document.createElement("div");
+        s.className="spark";
+        s.textContent=icons[Math.floor(Math.random()*icons.length)];
+        s.style.left=x+"px"; s.style.top=y+"px";
+        s.style.setProperty("--x",(Math.random()*220-110)+"px");
+        s.style.setProperty("--y",(Math.random()*-180-20)+"px");
+        document.body.appendChild(s);
+        setTimeout(()=>s.remove(),1200);
+      }
+    }
+
+    // ==========================
+    // MINI GAME
+    // ==========================
+    const game = document.getElementById("game");
+    const rabbit = document.getElementById("rabbit");
+    let score=0, miss=0, running=false, spawnTimer=null;
+    let rabbitX=.5;
+
+    function moveRabbit(clientX){
+      const rect=game.getBoundingClientRect();
+      rabbitX=(clientX-rect.left)/rect.width;
+      rabbitX=Math.max(.07,Math.min(.93,rabbitX));
+      rabbit.style.left=(rabbitX*100)+"%";
+    }
+    game.addEventListener("mousemove", e => { if(running) moveRabbit(e.clientX); });
+    game.addEventListener("touchmove", e => {
+      if(running && e.touches[0]) moveRabbit(e.touches[0].clientX);
+      e.preventDefault();
+    }, {passive:false});
+
+    function startGame(){
+      if(running) return;
+      score=0;miss=0;running=true;
+      document.getElementById("score").textContent=0;
+      document.getElementById("miss").textContent=0;
+      document.getElementById("gameMsg").textContent="Bắt đủ 5 chiếc bánh nhé! 🥮";
+      document.getElementById("startGameBtn").classList.add("hidden");
+      document.getElementById("afterGameBtn").classList.add("hidden");
+      [...game.querySelectorAll(".cake")].forEach(x=>x.remove());
+      spawnTimer=setInterval(spawnCake,750);
+      spawnCake();
+    }
+
+    function spawnCake(){
+      if(!running) return;
+      const cake=document.createElement("div");
+      cake.className="cake";
+      cake.textContent="🥮";
+      const left=8+Math.random()*84;
+      const duration=2.6+Math.random()*1.0;
+      cake.style.left=left+"%";
+      cake.style.animationDuration=duration+"s";
+      game.appendChild(cake);
+
+      const checker=setInterval(()=>{
+        if(!running || !cake.isConnected){clearInterval(checker);return;}
+        const c=cake.getBoundingClientRect();
+        const r=rabbit.getBoundingClientRect();
+        if(c.bottom>=r.top+8 && c.top<=r.bottom-4 && c.right>=r.left+7 && c.left<=r.right-7){
+          clearInterval(checker);
+          cake.remove();
+          score++;
+          document.getElementById("score").textContent=score;
+          sparkle(r.left+r.width/2, r.top, 5);
+          if(score>=5) finishGame();
+        }
+      },45);
+
+      setTimeout(()=>{
+        if(cake.isConnected && running){
+          cake.remove(); miss++;
+          document.getElementById("miss").textContent=miss;
+        }
+        clearInterval(checker);
+      }, duration*1000+150);
+    }
+
+    function finishGame(){
+      running=false; clearInterval(spawnTimer);
+      [...game.querySelectorAll(".cake")].forEach(x=>x.remove());
+      document.getElementById("gameMsg").textContent="Đủ 5 chiếc bánh rồi! Nhưng… vẫn thiếu một thứ 👀";
+      document.getElementById("afterGameBtn").classList.remove("hidden");
+      sparkle(window.innerWidth/2, window.innerHeight*.45, 22);
+    }
+
+    // ==========================
+    // ÂM THANH NHẸ - KHÔNG CẦN FILE MP3
+    // ==========================
+    let audioCtx=null, musicOn=false, loopTimer=null;
+    const musicBtn=document.getElementById("musicBtn");
+
+    function tone(freq, when=0, dur=.35, gain=.025){
+      if(!audioCtx) return;
+      const o=audioCtx.createOscillator();
+      const g=audioCtx.createGain();
+      o.type="sine"; o.frequency.value=freq;
+      g.gain.setValueAtTime(0.001,audioCtx.currentTime+when);
+      g.gain.exponentialRampToValueAtTime(gain,audioCtx.currentTime+when+.03);
+      g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+when+dur);
+      o.connect(g).connect(audioCtx.destination);
+      o.start(audioCtx.currentTime+when);
+      o.stop(audioCtx.currentTime+when+dur+.05);
+    }
+
+    function playPattern(){
+      if(!musicOn) return;
+      [523.25,659.25,783.99,659.25,587.33,698.46,880,698.46].forEach((f,i)=>tone(f,i*.42,.32,.018));
+    }
+
+    musicBtn.addEventListener("click", async ()=>{
+      if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+      if(audioCtx.state==="suspended") await audioCtx.resume();
+      musicOn=!musicOn;
+      musicBtn.textContent=musicOn?"♪":"♫";
+      musicBtn.style.background=musicOn?"rgba(255,217,120,.22)":"rgba(255,255,255,.09)";
+      if(musicOn){
+        playPattern();
+        loopTimer=setInterval(playPattern,3600);
+      }else{
+        clearInterval(loopTimer);
+      }
+    });
+  </script>
+</body>
+</html>
